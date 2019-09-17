@@ -1,5 +1,5 @@
 class Movies {
-  List<Movie> movies = new List();
+  List<Movie> items = new List();
 
   Movies();
 
@@ -7,7 +7,7 @@ class Movies {
     if (json == null) return;
     for (var item in json) {
       final movie = new Movie.fromJson(item);
-      movies.add(movie);
+      items.add(movie);
     }
   }
 }
