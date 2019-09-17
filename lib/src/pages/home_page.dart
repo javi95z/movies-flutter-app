@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movies_flutter_app/src/models/movie_model.dart';
 import 'package:movies_flutter_app/src/providers/movies_provider.dart';
 import 'package:movies_flutter_app/src/widgets/card_swiper_widget.dart';
 
@@ -20,7 +21,8 @@ class HomePage extends StatelessWidget {
         ),
         body: Container(
           child: Column(
-            children: <Widget>[_cardsSwiper()],
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[_cardsSwiper(), _infiniteFooter(context)],
           ),
         ));
   }
@@ -38,6 +40,24 @@ class HomePage extends StatelessWidget {
           );
         }
       },
+    );
+  }
+
+  Widget _infiniteFooter(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      child: Column(
+        children: <Widget>[
+          Text('Popular movies', style: Theme.of(context).textTheme.subhead),
+          FutureBuilder(
+            future: moviesProvider.getPopular(),
+            builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+              snapshot.data?.forEach((f) => print(f.title));
+              return Container();
+            },
+          )
+        ],
+      ),
     );
   }
 }
