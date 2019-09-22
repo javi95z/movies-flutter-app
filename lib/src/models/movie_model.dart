@@ -65,4 +65,8 @@ class Movie {
   getPosterImage() {
     return 'https://image.tmdb.org/t/p/w300/$posterPath';
   }
+
+  getBackgroundImage() {
+    return 'https://image.tmdb.org/t/p/w780/$backdropPath';
+  }
 }
