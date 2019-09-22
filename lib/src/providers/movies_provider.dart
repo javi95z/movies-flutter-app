@@ -18,7 +18,6 @@ class MoviesProvider {
     _popularStreamController?.close();
   }
 
-
   Future<List<Movie>> _proccessResponse(Uri url) async {
     final response = await http.get(url);
     final decoded = json.decode(response.body);

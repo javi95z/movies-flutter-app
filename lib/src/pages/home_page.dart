@@ -9,6 +9,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    moviesProvider.getPopular();
     return Scaffold(
         appBar: AppBar(
           title: Text('Movies'),
@@ -54,13 +55,14 @@ class HomePage extends StatelessWidget {
               child: Text('Popular movies',
                   style: Theme.of(context).textTheme.subhead)),
           SizedBox(height: 10.0),
-          FutureBuilder(
-            future: moviesProvider.getPopular(),
+          StreamBuilder(
+            stream: moviesProvider.popularStream,
             builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
               if (snapshot.hasData) {
-                return HorizontalMovie(movies: snapshot.data);
+                return HorizontalMovie(
+                    movies: snapshot.data, nextPage: moviesProvider.getPopular);
               } else {
-                return Container();
+                return Center(child: CircularProgressIndicator());
               }
             },
           )
