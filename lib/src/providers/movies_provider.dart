@@ -9,9 +9,11 @@ class MoviesProvider {
   String _language = 'es-ES';
 
   int _popularPage = 0;
+  bool _loading = false;
+
   List<Movie> _popular = new List();
   final _popularStreamController = StreamController<List<Movie>>.broadcast();
-  
+
   Function(List<Movie>) get popularSink => _popularStreamController.sink.add;
   Stream<List<Movie>> get popularStream => _popularStreamController.stream;
   void disposeStreams() {
@@ -32,6 +34,8 @@ class MoviesProvider {
   }
 
   Future<List<Movie>> getPopular() async {
+    if (_loading) return [];
+    _loading = true;
     _popularPage++;
     final url = Uri.https(_url, '3/movie/popular', {
       'api_key': _apiKey,
@@ -41,6 +45,7 @@ class MoviesProvider {
     final resp = await _proccessResponse(url);
     _popular.addAll(resp);
     popularSink(_popular);
+    _loading = false;
     return resp;
   }
 }
