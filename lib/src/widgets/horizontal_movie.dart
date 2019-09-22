@@ -31,7 +31,7 @@ class HorizontalMovie extends StatelessWidget {
   }
 
   Widget _createCard(BuildContext context, Movie movie) {
-    return Container(
+    final movieCard = Container(
       margin: EdgeInsets.only(right: 15.0),
       child: Column(
         children: <Widget>[
@@ -49,6 +49,12 @@ class HorizontalMovie extends StatelessWidget {
               style: Theme.of(context).textTheme.caption)
         ],
       ),
+    );
+    return GestureDetector(
+      child: movieCard,
+      onTap: () {
+        Navigator.pushNamed(context, 'details', arguments: movie);
+      },
     );
   }
 }
