@@ -7,7 +7,16 @@ class MovieDetailsPage extends StatelessWidget {
     final Movie movie = ModalRoute.of(context).settings.arguments;
     return Scaffold(
         body: CustomScrollView(
-      slivers: <Widget>[_createAppbar(movie)],
+      slivers: <Widget>[
+        _createAppbar(movie),
+        SliverList(
+          delegate: SliverChildListDelegate([
+            SizedBox(height: 10.0),
+            _posterTitle(context, movie),
+            _description(movie)
+          ]),
+        )
+      ],
     ));
   }
 
@@ -29,5 +38,50 @@ class MovieDetailsPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _posterTitle(BuildContext context, Movie movie) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 20.0),
+      child: Row(
+        children: <Widget>[
+          ClipRRect(
+            borderRadius: BorderRadius.circular(20.0),
+            child: Image(
+              image: NetworkImage(movie.getPosterImage()),
+              height: 150.0,
+            ),
+          ),
+          SizedBox(width: 20.0),
+          Flexible(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(movie.title,
+                    style: Theme.of(context).textTheme.headline,
+                    overflow: TextOverflow.ellipsis),
+                Text(movie.originalTitle,
+                    style: Theme.of(context).textTheme.subhead,
+                    overflow: TextOverflow.ellipsis),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    Text(movie.voteAverage.toString(),
+                        style: Theme.of(context).textTheme.title),
+                    Icon(Icons.star)
+                  ],
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _description(Movie movie) {
+    return Container(
+        padding: EdgeInsets.all(20.0),
+        child: Text(movie.overview, textAlign: TextAlign.justify));
   }
 }
