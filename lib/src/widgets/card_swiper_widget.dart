@@ -5,7 +5,7 @@ import 'package:movies_flutter_app/src/models/movie_model.dart';
 class CardSwiper extends StatelessWidget {
   final List<Movie> movies;
 
-  CardSwiper({ @required this.movies});
+  CardSwiper({@required this.movies});
 
   @override
   Widget build(BuildContext context) {
@@ -17,14 +17,22 @@ class CardSwiper extends StatelessWidget {
       child: Swiper(
         itemWidth: _screenSize.width * 0.7,
         itemHeight: _screenSize.height * 0.5,
-        itemBuilder: (BuildContext context, int index) {
-          return ClipRRect(
+        itemBuilder: (BuildContext context, int i) {
+          movies[i].uniqueId = '${movies[i].id}-card';
+          final _poster = ClipRRect(
             borderRadius: BorderRadius.circular(20.0),
-            child: FadeInImage(
-              image: NetworkImage(movies[index].getPosterImage()),
-              placeholder: AssetImage('assets/img/no-image.jpg'),
-              fit: BoxFit.cover,
+            child: GestureDetector(
+              onTap: () => Navigator.pushNamed(context, 'details', arguments: movies[i]),
+              child: FadeInImage(
+                image: NetworkImage(movies[i].getPosterImage()),
+                placeholder: AssetImage('assets/img/no-image.jpg'),
+                fit: BoxFit.cover,
+              ),
             ),
+          );
+          return Hero(
+            tag: movies[i].uniqueId,
+            child: _poster,
           );
         },
         itemCount: movies.length,
