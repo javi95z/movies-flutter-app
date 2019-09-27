@@ -43,8 +43,9 @@ class Actor {
   }
   
   getProfileImage() {
-    if (profilePath != null) {
-      return 'https://image.tmdb.org/t/p/w300/$profilePath';
+    if (profilePath == null) {
+      return '';
     }
+    return 'https://image.tmdb.org/t/p/w300/$profilePath';
   }
 }

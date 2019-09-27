@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:movies_flutter_app/src/models/actor_model.dart';
 import 'package:movies_flutter_app/src/models/movie_model.dart';
+import 'package:movies_flutter_app/src/providers/movies_provider.dart';
 
 class MovieDetailsPage extends StatelessWidget {
   @override
@@ -13,7 +15,8 @@ class MovieDetailsPage extends StatelessWidget {
           delegate: SliverChildListDelegate([
             SizedBox(height: 10.0),
             _posterTitle(context, movie),
-            _description(movie)
+            _description(movie),
+            _createCasting(movie)
           ]),
         )
       ],
@@ -81,7 +84,58 @@ class MovieDetailsPage extends StatelessWidget {
 
   Widget _description(Movie movie) {
     return Container(
-        padding: EdgeInsets.all(20.0),
-        child: Text(movie.overview, textAlign: TextAlign.justify));
+      padding: EdgeInsets.all(20.0),
+      child: Text(movie.overview, textAlign: TextAlign.justify),
+    );
+  }
+
+  Widget _createCasting(Movie movie) {
+    final provider = new MoviesProvider();
+    return FutureBuilder(
+      future: provider.getCast(movie.id.toString()),
+      builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+        if (snapshot.hasData) {
+          return _createCastPageView(snapshot.data);
+        } else {
+          return Center(child: CircularProgressIndicator());
+        }
+      },
+    );
+  }
+
+  Widget _createCastPageView(List<Actor> cast) {
+    return SizedBox(
+      height: 200.0,
+      child: PageView.builder(
+        pageSnapping: false,
+        controller: PageController(initialPage: 1, viewportFraction: 0.3),
+        itemCount: cast.length,
+        itemBuilder: (context, i) => _actorCard(cast[i]),
+      ),
+    );
+  }
+
+  Widget _actorCard(Actor actor) {
+    return Container(
+      child: Column(
+        children: <Widget>[
+          ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: FadeInImage(
+              image: NetworkImage(actor.getProfileImage()),
+              placeholder: AssetImage('assets/img/no-image.jpg'),
+              height: 150.0,
+              fit: BoxFit.cover,
+            ),
+          ),
+          SizedBox(height: 10.0),
+          Text(
+            actor.name,
+            textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
+          )
+        ],
+      ),
+    );
   }
 }
