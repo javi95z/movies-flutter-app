@@ -64,6 +64,9 @@ class Movie {
   }
 
   getPosterImage() {
+    if (posterPath == null) {
+      return '';
+    }
     return 'https://image.tmdb.org/t/p/w300/$posterPath';
   }
 
